@@ -21,9 +21,7 @@ jobs:
             .venv
           key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
       - run: pip install --upgrade pip setuptools wheel
-      - run: pip install poetry
-      - run: poetry install
-        if: steps.cache.outputs.cache-hit != 'true'
+      - run: pip install poetry && poetry install
   lint:
     needs: prepare
     runs-on: ubuntu-latest
@@ -38,6 +36,7 @@ jobs:
             ~/.cache/pip
             .venv
           key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+      - run: pip install poetry && poetry install
       - run: ./scripts/lint.sh
   typecheck:
     needs: prepare
@@ -57,6 +56,7 @@ jobs:
         with:
           path: .mypy_cache
           key: ${{ runner.os }}-mypy-${{ hashFiles('**/poetry.lock') }}
+      - run: pip install poetry && poetry install
       - run: ./scripts/typecheck.sh
   test:
     needs: prepare
@@ -72,6 +72,7 @@ jobs:
             ~/.cache/pip
             .venv
           key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+      - run: pip install poetry && poetry install
       - run: ./scripts/test.sh
       - uses: codecov/codecov-action@v2
   acceptance:
@@ -88,4 +89,5 @@ jobs:
             ~/.cache/pip
             .venv
           key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+      - run: pip install poetry && poetry install
       - run: ./scripts/acceptance.sh
