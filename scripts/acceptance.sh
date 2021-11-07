@@ -3,9 +3,13 @@
 DEFAULT_ENVIRONMENT_URL="http://localhost:8080"
 ENVIRONMENT_URL="${ENVIRONMENT_URL:-$DEFAULT_ENVIRONMENT_URL}"
 
+if [ -n "$GITHUB_SHA" ]; then
+  export IMAGE_TAG="$GITHUB_SHA"
+fi
+
 if [ "$ENVIRONMENT_URL" = "$DEFAULT_ENVIRONMENT_URL" ] && ! docker compose ps --filter 'status=running' --services | grep -q app; then
   echo "Starting containers..."
-  docker compose up app -d --build
+  docker compose up -f docker-compose.yml app -d --build
   _stop_container=1
 fi
 
@@ -15,7 +19,7 @@ _status=$?
 
 if [ -n "$_stop_container" ] || test $_status -ne 0; then
   echo "Stopping containers..."
-  docker compose down app
+  docker compose -f docker-compose.yml down app
 fi
 
 exit $_status

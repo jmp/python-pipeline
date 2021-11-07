@@ -75,8 +75,14 @@ jobs:
       - run: pip install poetry && poetry install
       - run: ./scripts/test.sh
       - uses: codecov/codecov-action@v2
-  acceptance:
+  publish:
     needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./scripts/build.sh
+  acceptance:
+    needs: publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

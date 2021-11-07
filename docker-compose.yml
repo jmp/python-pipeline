@@ -2,6 +2,6 @@ version: "3.9"
 
 services:
   app:
-    build: .
+    image: ghcr.io/jmp/python-pipeline-app:${IMAGE_TAG}
     ports:
       - "8080:8080"
