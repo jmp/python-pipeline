@@ -22,7 +22,6 @@ jobs:
           key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
       - run: pip install --upgrade pip setuptools wheel
       - run: pip install poetry
-        if: steps.cache.outputs.cache-hit != 'true'
       - run: poetry install
         if: steps.cache.outputs.cache-hit != 'true'
   lint:
