@@ -9,7 +9,7 @@ env:
   COVERAGE: "1"
 
 jobs:
-  prepare:
+  install:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,7 +23,7 @@ jobs:
       - run: pip install --upgrade pip setuptools wheel
       - run: pip install poetry && poetry install
   lint:
-    needs: prepare
+    needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
       - run: pip install poetry && poetry install
       - run: ./scripts/lint.sh
   typecheck:
-    needs: prepare
+    needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -59,7 +59,7 @@ jobs:
       - run: pip install poetry && poetry install
       - run: ./scripts/typecheck.sh
   test:
-    needs: prepare
+    needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
