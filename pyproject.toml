@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "python-pipeline"
+version = "0.1.0"
+description = "An experiment for building a CD pipeline using GitHub Actions."
+authors = ["Jarkko Piiroinen <183207+jmp@users.noreply.github.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.70.0"
+pydantic = "^1.8.2"
+uvicorn = "^0.15.0"
+
+[tool.poetry.dev-dependencies]
+black = "^21.9b0"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+pytest-env = "^0.6.2"
+pytest-bdd = "^5.0.0"
+pytest-html = "^3.1.1"
+isort = "^5.9.3"
+flake8 = "^4.0.1"
+mypy = "^0.910"
+requests = "^2.26.0"
+types-requests = "^2.25.11"
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+markers = ["acceptance: marks tests as acceptance tests"]
+addopts = "-m 'not acceptance'"
+
+[[tool.mypy.overrides]]
+module = "pytest_bdd"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_decorators = false
+
+[tool.coverage.report]
+exclude_lines = ["raise NotImplementedError"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
