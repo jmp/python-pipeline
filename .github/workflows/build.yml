@@ -101,4 +101,9 @@ jobs:
             .venv
           key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
       - run: pip install poetry && poetry install
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
       - run: ./scripts/acceptance.sh
