@@ -1,0 +1,85 @@
+name: build
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  PYTHON_VERSION: "3.10"
+  POETRY_VIRTUALENVS_IN_PROJECT: "1"
+  CACHE_VERSION: "1"
+  COVERAGE: "1"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+      - run: pip install --upgrade pip setuptools wheel
+      - run: pip install poetry
+      - run: poetry install
+      - run: ./scripts/lint.sh
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+      - uses: actions/cache@v2
+        with:
+          path: .mypy_cache
+          key: ${{ runner.os }}-mypy-${{ hashFiles('**/poetry.lock') }}
+      - run: pip install --upgrade pip setuptools wheel
+      - run: pip install poetry
+      - run: poetry install
+      - run: ./scripts/typecheck.sh
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+      - run: pip install --upgrade pip setuptools wheel
+      - run: pip install poetry
+      - run: poetry install
+      - run: ./scripts/test.sh
+      - uses: codecov/codecov-action@v2
+  acceptance:
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-reqs-${{ env.CACHE_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+      - run: pip install --upgrade pip setuptools wheel
+      - run: pip install poetry
+      - run: poetry install
+      - run: ./scripts/acceptance.sh
