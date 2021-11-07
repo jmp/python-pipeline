@@ -1,5 +1,5 @@
 FROM python:3.10-slim as build
-RUN pip install setuptools wheel && pip install poetry
+RUN pip install poetry
 COPY pyproject.toml poetry.lock ./
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi
