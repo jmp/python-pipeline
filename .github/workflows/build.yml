@@ -98,7 +98,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/jmp/python-pipeline-app:latest
-            ghcr.io/jmp/python-pipeline-app:${{ env.GITHUB_SHA }}
+            ghcr.io/jmp/python-pipeline-app:${{ github.sha }}
   acceptance:
     name: Acceptance
     needs: publish
