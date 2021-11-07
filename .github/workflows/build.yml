@@ -10,6 +10,7 @@ env:
 
 jobs:
   install:
+    name: Install dependencies
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,6 +24,7 @@ jobs:
       - run: pip install --upgrade pip setuptools wheel
       - run: pip install poetry && poetry install
   lint:
+    name: Lint
     needs: install
     runs-on: ubuntu-latest
     steps:
@@ -39,6 +41,7 @@ jobs:
       - run: pip install poetry && poetry install
       - run: ./scripts/lint.sh
   typecheck:
+    name: Type check
     needs: install
     runs-on: ubuntu-latest
     steps:
@@ -59,6 +62,7 @@ jobs:
       - run: pip install poetry && poetry install
       - run: ./scripts/typecheck.sh
   test:
+    name: Test
     needs: install
     runs-on: ubuntu-latest
     steps:
@@ -76,6 +80,7 @@ jobs:
       - run: ./scripts/test.sh
       - uses: codecov/codecov-action@v2
   publish:
+    name: Publish
     needs: [lint, typecheck, test]
     runs-on: ubuntu-latest
     steps:
@@ -87,6 +92,7 @@ jobs:
           password: ${{ secrets.CR_PAT }}
       - run: ./scripts/publish.sh
   acceptance:
+    name: Acceptance
     needs: publish
     runs-on: ubuntu-latest
     steps:
